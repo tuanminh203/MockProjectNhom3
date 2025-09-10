@@ -1,6 +1,6 @@
 package com.vti.entity;
 
-import com.vti.entity.enums.OTPtype;
+import com.vti.entity.enums.OTPType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,5 +30,5 @@ public class OTP {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private OTPtype type;
+    private OTPType type;
 }
