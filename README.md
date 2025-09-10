@@ -31,5 +31,6 @@ npm install react-router-dom
 module scss
 react-router
 json-server
+npm install react-icons
 
 account : Larry - Larry@123
