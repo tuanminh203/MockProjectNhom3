@@ -3,7 +3,6 @@ package com.vti.dto;
 import lombok.Data;
 
 @Data
-public class ResetPasswordRequest {
+public class VerifyOtpRequest {
     private String otp;
-    private String newPassword;
 }
