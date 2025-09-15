@@ -11,7 +11,7 @@ export default function Header() {
       {/* Menu */}
       <nav className="nav">
         <Link to="/">Trang chủ</Link>
-        <Link to="/friends">Danh sách bạn</Link>
+        <Link to="/friends">Danh sách bàn</Link>
         <Link to="/menu">Menu</Link>
         <Link to="/contact">Liên hệ</Link>
       </nav>
