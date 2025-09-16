@@ -49,5 +49,4 @@ public class AuthController {
         return ResponseEntity.ok("Mật khẩu đã được đặt lại thành công.");
     }
 
-
 }

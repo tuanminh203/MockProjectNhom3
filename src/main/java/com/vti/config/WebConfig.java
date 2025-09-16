@@ -13,10 +13,10 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://127.0.0.1:5500") // dùng domain frontend thật
+                        .allowedOrigins("http://localhost:3000")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*");
+                        .allowedHeaders("*");
+//                      .allowedOriginPatterns("http://localhost:*")
             }
         };
     }
