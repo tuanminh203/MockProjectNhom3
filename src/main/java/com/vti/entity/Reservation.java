@@ -5,9 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
 @Table(name = "reservations")
@@ -28,11 +27,8 @@ public class Reservation {
     @JoinColumn(name = "table_id", nullable = false)
     private Tables table;
 
-    @Column(name = "reservation_date", nullable = false)
-    private LocalDate reservationDate;
-
-    @Column(name = "reservation_time", nullable = false)
-    private LocalTime reservationTime;
+    @Column(name = "reservation_datetime", nullable = false)
+    private LocalDateTime reservationDateTime;
 
     @Column(name = "num_people")
     private Integer numPeople;

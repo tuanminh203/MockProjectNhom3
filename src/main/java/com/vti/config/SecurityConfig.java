@@ -37,15 +37,23 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**", "/error", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()
                         .requestMatchers("/api/v1/menu/**").permitAll()
-                        .requestMatchers("/api/v1/bookings/**").permitAll()
+
+                        // API chỉ cho người dùng đã đăng nhập (cơ bản)
+                        .requestMatchers("/api/v1/reservations/tables/available").authenticated()
+                        .requestMatchers("/api/v1/reservations/make/**").authenticated()
+                        .requestMatchers("/api/v1/reservations/cancel/**").authenticated()
+
+                        // API chỉ cho Manager/Admin
+                        .requestMatchers("/api/v1/reservations/confirm/**").hasAnyAuthority("MANAGER", "ADMIN")
+                        .requestMatchers("/api/v1/reservations/complete/**").hasAnyAuthority("MANAGER", "ADMIN")
 
                         // Các API yêu cầu xác thực và phân quyền
-                        .requestMatchers("/api/v1/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/v1/manager/**").hasAuthority("ROLE_MANAGER")
-                        .requestMatchers("/api/v1/customer/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN", "ROLE_MANAGER")
+//                        .requestMatchers("/api/v1/admin/**").hasAuthority("ROLE_ADMIN")
+//                        .requestMatchers("/api/v1/manager/**").hasAuthority("ROLE_MANAGER")
+//                        .requestMatchers("/api/v1/customer/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN", "ROLE_MANAGER")
 
                         // Các yêu cầu khác yêu cầu xác thực
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
