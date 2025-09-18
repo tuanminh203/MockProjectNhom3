@@ -10,8 +10,8 @@ export default function ForgotPassword() {
     // TODO: gọi API gửi email reset mật khẩu
     alert("Yêu cầu đặt lại mật khẩu đã được gửi vào email của bạn!");
 
-    // Sau khi gửi xong → quay về trang đăng nhập
-    navigate("/sign-in");
+    // Sau khi gửi xong → chuyển sang trang nhập OTP
+    navigate("/reset-password");
   };
 
   return (

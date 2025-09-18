@@ -28,18 +28,7 @@ export default function Register() {
           <input type="date" required />
         </div>
 
-        <div className="form-group">
-          <label>Giới tính</label>
-          <div className="gender-options">
-            <label>
-              <input type="checkbox" name="gender" value="male" /> Nam
-            </label>
-            <label>
-              <input type="checkbox" name="gender" value="female" /> Nữ
-            </label>
-          </div>
-        </div>
-
+        
         <div className="form-group">
           <label>Mật khẩu</label>
           <input type="password" placeholder="Nhập mật khẩu" required />
@@ -58,6 +47,10 @@ export default function Register() {
         <div className="form-group">
           <label>Số điện thoại</label>
           <input type="tel" placeholder="Nhập số điện thoại" required />
+        </div>
+        <div className="form-group">
+          <label>Địa chỉ</label>
+          <input type="address" placeholder="Nhập địa chỉ" required />
         </div>
 
         <div className="form-actions">

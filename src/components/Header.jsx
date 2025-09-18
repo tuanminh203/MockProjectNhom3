@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiBell, FiUser, FiSearch } from "react-icons/fi"; // 👉 import icon
+import { FiBell, FiUser, FiSearch , FiShoppingCart} from "react-icons/fi"; // 👉 import icon
 import "../styles/Header.css";
 
 export default function Header() {
@@ -11,7 +11,7 @@ export default function Header() {
       {/* Menu */}
       <nav className="nav">
         <Link to="/">Trang chủ</Link>
-        <Link to="/friends">Danh sách bàn</Link>
+        <Link to="/tables">Danh sách bàn</Link>
         <Link to="/menu">Menu</Link>
         <Link to="/contact">Liên hệ</Link>
       </nav>
@@ -25,6 +25,7 @@ export default function Header() {
 
         <FiBell className="icon" />
         <FiUser className="icon" />
+        <FiShoppingCart className="icon" />
 
         <div className="auth-links">
           <Link to="/register">Đăng ký</Link> |{" "}

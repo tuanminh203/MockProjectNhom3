@@ -7,6 +7,10 @@ import SignIn from "./components/SignIn";
 import Register from "./components/Register";
 import ForgotPassword from "./components/ForgotPassword";
 import Menu from "./components/Menu";
+import ResetPassword from "./components/ResetPassword";
+import Tablelist from "./components/Tablelist";
+import TableBooking from "./components/Tablebooking";
+
 
 const router = createBrowserRouter([
   {
@@ -21,6 +25,15 @@ const router = createBrowserRouter([
         path: "menu",
         element: <Menu />,
       },
+      {
+        path: "tables",
+        element: <Tablelist />,
+      },
+      {
+        path: "booking/:id",
+        element: <TableBooking />,
+      },
+      
     ],
   },
   {
@@ -35,6 +48,11 @@ const router = createBrowserRouter([
     path: "/forgot-password",
     element: <ForgotPassword />,
   },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />
+  },
+ 
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
