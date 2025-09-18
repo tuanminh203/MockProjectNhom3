@@ -1,8 +1,27 @@
-import { Link } from "react-router-dom";
-import { FiBell, FiUser, FiSearch , FiShoppingCart} from "react-icons/fi"; // 👉 import icon
+import { Link, useNavigate } from "react-router-dom";
+import { FiBell, FiUser, FiSearch, FiShoppingCart } from "react-icons/fi";
+import { useState, useEffect } from "react";
 import "../styles/Header.css";
 
 export default function Header() {
+  const [username, setUsername] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Effect để kiểm tra trạng thái đăng nhập khi component được render
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    setUsername(null);
+    navigate("/");
+  };
+
   return (
     <header className="header">
       {/* Logo */}
@@ -28,8 +47,21 @@ export default function Header() {
         <FiShoppingCart className="icon" />
 
         <div className="auth-links">
-          <Link to="/register">Đăng ký</Link> |{" "}
-          <Link to="/sign-in">Đăng nhập</Link>
+          {username ? (
+            // Nếu đã đăng nhập, hiển thị lời chào và nút Đăng xuất
+                        <div className="user-info">
+                            <div className="welcome-text">
+                                <span>Chào mừng {username}</span>
+                            </div>
+                            <button className="logout-btn" onClick={handleLogout}>Đăng xuất</button>
+                        </div>
+          ) : (
+            // Nếu chưa đăng nhập, hiển thị link Đăng ký/Đăng nhập
+            <>
+              <Link to="/register">Đăng ký</Link> |{" "}
+              <Link to="/sign-in">Đăng nhập</Link>
+            </>
+          )}
         </div>
       </div>
     </header>

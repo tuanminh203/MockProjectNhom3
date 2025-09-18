@@ -9,7 +9,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import Menu from "./components/Menu";
 import ResetPassword from "./components/ResetPassword";
 import Tablelist from "./components/Tablelist";
-import TableBooking from "./components/Tablebooking";
+import Booking from "./components/Booking";
 
 
 const router = createBrowserRouter([
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
       },
       {
         path: "booking/:id",
-        element: <TableBooking />,
+        element: <Booking />,
       },
       
     ],
