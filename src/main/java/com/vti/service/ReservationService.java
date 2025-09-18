@@ -1,6 +1,7 @@
 package com.vti.service;
 
 import com.vti.dto.ReservationRequest;
+import com.vti.dto.ReservationResponse;
 import com.vti.entity.Reservation;
 import com.vti.entity.Tables;
 import com.vti.entity.User;
@@ -12,6 +13,7 @@ import com.vti.repository.TableRepository;
 import com.vti.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final TableRepository tableRepository;
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     // Lấy danh sách các bàn đang trống
     public List<Tables> getAvailableTables() {
@@ -34,7 +38,7 @@ public class ReservationService {
 
     // Đặt bàn mới
     @Transactional
-    public Reservation makeReservation(Long tableId, ReservationRequest request) {
+    public ReservationResponse makeReservation(Long tableId, ReservationRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new AppException("Người dùng không tồn tại.", HttpStatus.NOT_FOUND));
@@ -60,16 +64,23 @@ public class ReservationService {
         reservation.setNumPeople(request.getNumPeople());
         reservation.setStatus(ReservationStatus.PENDING);
 
-        return reservationRepository.save(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        // Chuyển đổi từ entity Reservation sang DTO ReservationResponse
+        return modelMapper.map(savedReservation, ReservationResponse.class);
     }
 
     // Lấy lịch sử đặt bàn của người dùng hiện tại
-    public List<Reservation> getUserReservations() {
+    public List<ReservationResponse> getUserReservations() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new AppException("Người dùng không tồn tại.", HttpStatus.NOT_FOUND));
 
-        return reservationRepository.findByUser(currentUser);
+        List<Reservation> userReservations = reservationRepository.findByUser(currentUser);
+
+        return userReservations.stream()
+                .map(reservation -> modelMapper.map(reservation, ReservationResponse.class))
+                .collect(Collectors.toList());
     }
 
     // Lấy toàn bộ danh sách đặt bàn (dành cho Admin/Manager)
@@ -95,7 +106,7 @@ public class ReservationService {
 
     // Hủy đơn đặt bàn
     @Transactional
-    public Reservation cancelReservation(Long reservationId) {
+    public ReservationResponse cancelReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new AppException("Đơn đặt bàn không tồn tại.", HttpStatus.NOT_FOUND));
 
@@ -106,7 +117,9 @@ public class ReservationService {
         reservation.setStatus(ReservationStatus.CANCELLED);
         reservation.getTable().setStatus(TableStatus.AVAILABLE);
 
-        return reservationRepository.save(reservation);
+        Reservation updatedReservation = reservationRepository.save(reservation);
+
+        return modelMapper.map(updatedReservation, ReservationResponse.class);
     }
 
     // Manager/Admin hoàn thành đơn đặt bàn

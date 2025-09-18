@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "shopping_cart_items")
 @Data
@@ -26,4 +28,7 @@ public class ShoppingCartItem {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Column(nullable = false)
+    private BigDecimal priceAtPurchase;
 }

@@ -29,7 +29,7 @@ public class Order {
     private BigDecimal totalPrice;
 
     @Column(nullable = false)
-    private LocalDateTime orderDate;
+    private LocalDateTime orderDateTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)

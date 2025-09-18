@@ -5,6 +5,7 @@ import com.vti.service.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -18,6 +19,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -33,27 +39,29 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Các API công khai, không cần xác thực
+                        // Public APIs
                         .requestMatchers("/api/v1/auth/**", "/error", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()
                         .requestMatchers("/api/v1/menu/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/api/v1/reservations/tables/available").permitAll()
 
-                        // API chỉ cho người dùng đã đăng nhập (cơ bản)
-                        .requestMatchers("/api/v1/reservations/tables/available").authenticated()
-                        .requestMatchers("/api/v1/reservations/make/**").authenticated()
-                        .requestMatchers("/api/v1/reservations/cancel/**").authenticated()
+                        // Allow all preflight requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // API chỉ cho Manager/Admin
+                        // Reservation APIs
                         .requestMatchers("/api/v1/reservations/confirm/**").hasAnyAuthority("MANAGER", "ADMIN")
                         .requestMatchers("/api/v1/reservations/complete/**").hasAnyAuthority("MANAGER", "ADMIN")
 
-                        // Các API yêu cầu xác thực và phân quyền
-//                        .requestMatchers("/api/v1/admin/**").hasAuthority("ROLE_ADMIN")
-//                        .requestMatchers("/api/v1/manager/**").hasAuthority("ROLE_MANAGER")
-//                        .requestMatchers("/api/v1/customer/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN", "ROLE_MANAGER")
+                        // Admin APIs
+                        .requestMatchers("/api/v1/admin/menu-items/**").hasAnyAuthority("ADMIN", "MANAGER")
 
-                        // Các yêu cầu khác yêu cầu xác thực
-//                        .anyRequest().authenticated()
+                        // Customer APIs
+                        .requestMatchers("/api/v1/cart/**").hasAuthority("CUSTOMER")
+                        .requestMatchers("/api/v1/orders/**").hasAuthority("CUSTOMER")
+
+                        // Any other requests must be authenticated
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
@@ -61,6 +69,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -79,4 +88,16 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials(true);
+//        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+//        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+//        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        source.registerCorsConfiguration("/**", config);
+//        return new CorsFilter(source);
+//    }
 }
