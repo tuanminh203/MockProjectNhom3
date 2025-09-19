@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiBell, FiUser, FiSearch, FiShoppingCart } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import "../styles/Header.css";
+import logoteam from "../assets/icons/logoteam.png"; 
 
 export default function Header() {
   const [username, setUsername] = useState(null);
@@ -23,9 +24,13 @@ export default function Header() {
   };
 
   return (
-    <header className="header">
+      <header className="header">
       {/* Logo */}
-      <div className="logo">LOGO</div>
+      <div className="logo">
+        <Link to="/"> {/* 👈 Click logo sẽ đưa về trang chủ */}
+          <img src={logoteam} alt="Logo Team" className="logo-img" />
+        </Link>
+      </div>
 
       {/* Menu */}
       <nav className="nav">
