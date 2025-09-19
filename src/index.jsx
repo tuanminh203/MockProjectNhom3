@@ -10,7 +10,7 @@ import Menu from "./components/Menu";
 import ResetPassword from "./components/ResetPassword";
 import Tablelist from "./components/Tablelist";
 import Booking from "./components/Booking";
-
+import ConfirmRegistration from "./components/ConfirmRegistration";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/confirm-registration/:email",
+    element: <ConfirmRegistration />,
   },
   {
     path: "/forgot-password",
