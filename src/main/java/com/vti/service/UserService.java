@@ -30,6 +30,9 @@ public class UserService {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
+        user.setAddress(request.getAddress());
+        user.setDateOfBirth(request.getBirthDate());
+        user.setPhoneNumber(request.getPhoneNumber());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFullname(request.getFullName());
         user.setRole(UserRole.CUSTOMER);

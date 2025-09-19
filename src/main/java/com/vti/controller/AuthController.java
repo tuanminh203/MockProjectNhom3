@@ -29,10 +29,9 @@ public class AuthController {
         return ResponseEntity.ok("Người dùng đã được đăng ký. Vui lòng kiểm tra email để xác thực tài khoản.");
     }
 
-    @PostMapping("/confirm-registration/{email}")
-    public ResponseEntity<String> confirmRegistration(@PathVariable String email,
-                                                      @RequestBody VerifyOtpRequest request) {
-        otpService.validateAndEnableUser(email, request.getOtp());
+    @PostMapping("/confirm-registration")
+    public ResponseEntity<String> confirmRegistration(@RequestBody VerifyOtpRequest request) {
+        otpService.validateAndEnableUser(request.getEmail(), request.getOtp());
         return ResponseEntity.ok("Tài khoản đã được xác thực thành công.");
     }
 
