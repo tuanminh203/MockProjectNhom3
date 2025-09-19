@@ -13,55 +13,55 @@ import Booking from "./components/Booking";
 import ConfirmRegistration from "./components/ConfirmRegistration";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <LayoutRoot />,
-    children: [
-      {
-        index: true,
-        element: <HomePage />,
-      },
-      {
-        path: "menu",
-        element: <Menu />,
-      },
-      {
-        path: "tables",
-        element: <Tablelist />,
-      },
-      {
-        path: "booking/:id",
-        element: <Booking />,
-      },
-      
-    ],
-  },
-  {
-    path: "/sign-in",
-    element: <SignIn />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/confirm-registration/:email",
-    element: <ConfirmRegistration />,
-  },
-  {
-    path: "/forgot-password",
-    element: <ForgotPassword />,
-  },
-  {
-    path: "/reset-password",
-    element: <ResetPassword />
-  },
- 
+  {
+    path: "/",
+    element: <LayoutRoot />,
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: "menu",
+        element: <Menu />,
+      },
+      {
+        path: "tables",
+        element: <Tablelist />,
+      },
+      {
+        path: "booking/:id",
+        element: <Booking />,
+      },
+      
+    ],
+  },
+  {
+    path: "/sign-in",
+    element: <SignIn />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    path: "/confirm-registration/:email",
+    element: <ConfirmRegistration />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset-password", 
+    element: <ResetPassword />
+  },
+ 
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
 );

@@ -37,11 +37,36 @@ export const confirmRegistration = async (email, otp) => {
     }
 };
 
+// Hàm gửi yêu cầu quên mật khẩu
+export const forgotPassword = async (email) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/auth/forgot-password`, { email });
+        return response.data;
+    } catch (error) {
+        console.error("Forgot password API failed:", error.response || error);
+        throw error;
+    }
+};
+
+// Hàm đặt lại mật khẩu
+export const resetPassword = async (requestBody) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/auth/reset-password`, requestBody);
+        return response.data;
+    } catch (error) {
+        console.error("Reset password API failed:", error.response || error);
+        throw error;
+    }
+};
+
+// Hàm gọi API lấy danh sách bàn trống
 export const getAvailableTables = async () => {
     const response = await axios.get(`${API_BASE_URL}/reservations/tables/available`);
     return response.data;
 };
 
+
+// Hàm gọi API đặt bàn
 export const makeReservation = async (tableId, requestBody, token) => {
     const response = await axios.post(
         `${API_BASE_URL}/reservations/make/${tableId}`,
