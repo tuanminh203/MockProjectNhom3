@@ -46,3 +46,9 @@
   border-radius: 6px;
   margin-bottom: 8px;
 }
+
+.dish-price {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+}

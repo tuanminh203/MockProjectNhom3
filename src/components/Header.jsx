@@ -1,15 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FiBell, FiUser, FiSearch, FiShoppingCart } from "react-icons/fi";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { CartContext } from "../Context/CartContext";
 import "../styles/Header.css";
-import logoteam from "../assets/icons/logoteam.png"; 
+import logoteam from "../assets/icons/logoteam.png";
+import CartOverlay from "./CartOverlay";
 
 export default function Header() {
   const [username, setUsername] = useState(null);
   const navigate = useNavigate();
+  const { cartItems } = useContext(CartContext);
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const [showCart, setShowCart] = useState(false);
 
   useEffect(() => {
-    // Effect để kiểm tra trạng thái đăng nhập khi component được render
     const storedUsername = localStorage.getItem("username");
     if (storedUsername) {
       setUsername(storedUsername);
@@ -24,10 +28,10 @@ export default function Header() {
   };
 
   return (
-      <header className="header">
+    <header className="header">
       {/* Logo */}
       <div className="logo">
-        <Link to="/"> {/* 👈 Click logo sẽ đưa về trang chủ */}
+        <Link to="/">
           <img src={logoteam} alt="Logo Team" className="logo-img" />
         </Link>
       </div>
@@ -49,19 +53,23 @@ export default function Header() {
 
         <FiBell className="icon" />
         <FiUser className="icon" />
-        <FiShoppingCart className="icon" />
+
+        <div className="cart-icon-wrapper" onClick={() => setShowCart(true)}>
+          <FiShoppingCart className="icon" />
+          {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+        </div>
 
         <div className="auth-links">
           {username ? (
-            // Nếu đã đăng nhập, hiển thị lời chào và nút Đăng xuất
-                        <div className="user-info">
-                            <div className="welcome-text">
-                                <span>Chào mừng {username}</span>
-                            </div>
-                            <button className="logout-btn" onClick={handleLogout}>Đăng xuất</button>
-                        </div>
+            <div className="user-info">
+              <div className="welcome-text">
+                <span>Chào mừng {username}</span>
+              </div>
+              <button className="logout-btn" onClick={handleLogout}>
+                Đăng xuất
+              </button>
+            </div>
           ) : (
-            // Nếu chưa đăng nhập, hiển thị link Đăng ký/Đăng nhập
             <>
               <Link to="/register">Đăng ký</Link> |{" "}
               <Link to="/sign-in">Đăng nhập</Link>
@@ -69,6 +77,8 @@ export default function Header() {
           )}
         </div>
       </div>
+
+      {showCart && <CartOverlay onClose={() => setShowCart(false)} />}
     </header>
   );
 }
