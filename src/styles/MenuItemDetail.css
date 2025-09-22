@@ -1,0 +1,266 @@
+/* Container chính, căn giữa và có padding */
+.menu-item-detail-container {
+max-width: 1200px;
+margin: 40px auto;
+padding: 20px;
+font-family: Arial, sans-serif;
+}
+
+.detail-card {
+display: flex;
+flex-wrap: wrap; 
+gap: 40px;
+background-color: #fff;
+border-radius: 12px;
+box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+padding: 30px;
+}
+
+/* Cột bên trái: Ảnh và thông tin mua hàng */
+.left-column {
+flex: 1.2;
+min-width: 300px;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+/* Khối hình ảnh chính */
+.detail-image-wrapper {
+width: 100%;
+max-width: 600px;
+height: auto;
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 20px;
+}
+
+/* Hình ảnh món ăn */
+.detail-image {
+width: 100%;
+height: auto;
+border-radius: 10px;
+object-fit: contain;
+display: block;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Cột bên phải: Mô tả, đánh giá, AI */
+.right-column {
+flex: 1;
+min-width: 300px;
+display: flex;
+flex-direction: column;
+}
+
+/* Thông tin sản phẩm và giá */
+.detail-info-group {
+border-bottom: 1px solid #eee;
+padding-bottom: 20px;
+margin-bottom: 20px;
+}
+
+.detail-sku, .detail-brand, .detail-status {
+font-size: 0.9rem;
+color: #888;
+margin-bottom: 5px;
+}
+
+.detail-rating {
+display: flex;
+align-items: center;
+font-size: 1rem;
+color: #ffc107;
+margin-bottom: 10px;
+}
+
+.detail-rating span {
+margin-left: 5px;
+color: #555;
+}
+
+/* Tên món ăn */
+.detail-name {
+font-size: 2rem;
+font-weight: bold;
+color: #333;
+margin-bottom: 10px;
+}
+
+/* Giá tiền */
+.detail-price {
+font-size: 1.8rem;
+font-weight: 700;
+color: #e44d26;
+margin-bottom: 5px;
+}
+
+.original-price {
+font-size: 1rem;
+color: #999;
+text-decoration: line-through;
+margin-bottom: 20px;
+}
+
+/* Điều khiển số lượng */
+.quantity-control {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-top: 20px;
+font-size: 1.1rem;
+}
+
+.quantity-control button {
+width: 30px;
+height: 30px;
+background-color: #f0f0f0;
+border: 1px solid #ccc;
+border-radius: 5px;
+font-size: 1.2rem;
+cursor: pointer;
+transition: background-color 0.2s;
+}
+
+.quantity-control button:hover {
+background-color: #e0e0e0;
+}
+
+.quantity-control input {
+width: 50px;
+height: 30px;
+text-align: center;
+border: 1px solid #ccc;
+border-radius: 5px;
+font-size: 1.1rem;
+}
+
+.action-buttons {
+display: flex;
+flex-wrap: wrap; 
+gap: 15px; 
+margin-top: 25px;
+}
+
+.add-to-cart-button,
+.buy-now-btn {
+flex: 1; /* Mỗi nút chiếm 1 phần không gian */
+padding: 15px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+font-weight: bold;
+font-size: 1.1rem;
+transition: background-color 0.3s;
+}
+
+.add-to-cart-btn {
+background-color: #333;
+color: #fff;
+}
+
+.add-to-cart-btn:hover {
+background-color: #000;
+}
+
+.buy-now-btn {
+background-color: #eee;
+color: #333;
+}
+
+.buy-now-btn:hover {
+background-color: #ddd;
+}
+
+/* Mô tả AI và gợi ý kết hợp */
+.ai-sections {
+margin-top: 30px;
+padding-top: 20px;
+border-top: 1px solid #eee;
+}
+
+.ai-description {
+padding: 15px;
+background-color: #f9f9f9;
+border-radius: 8px;
+margin-bottom: 15px;
+}
+
+.pairing-suggestion-section {
+padding: 15px;
+background-color: #f9f9f9;
+border-radius: 8px;
+margin-bottom: 15px;
+margin-top: 15px; /* Tăng khoảng cách để tách biệt hơn */
+}
+
+.ai-btn {
+background-color: #fff;
+color: #555;
+border: 1px solid #ccc;
+padding: 10px 15px;
+border-radius: 8px;
+cursor: pointer;
+font-size: 0.9rem;
+transition: background-color 0.3s, color 0.3s;
+width: 100%;
+margin-top: 10px;
+}
+
+.ai-btn:hover {
+background-color: #e0e0e0;
+}
+
+.ai-btn:disabled {
+cursor: not-allowed;
+opacity: 0.6;
+}
+
+/* Tab mô tả */
+.detail-tabs {
+display: flex;
+border-bottom: 2px solid #eee;
+margin-top: 40px;
+}
+
+.tab-button {
+padding: 15px 25px;
+font-size: 1rem;
+font-weight: bold;
+color: #999;
+background-color: transparent;
+border: none;
+cursor: pointer;
+transition: color 0.2s;
+margin-bottom: -2px;
+}
+
+.tab-button.active {
+color: #000;
+border-bottom: 2px solid #000;
+}
+
+.tab-content {
+padding: 20px 0;
+line-height: 1.6;
+color: #555;
+}
+
+/* Media Queries cho các thiết bị nhỏ hơn */
+@media (max-width: 768px) {
+.detail-card {
+flex-direction: column;
+align-items: center;
+}
+
+.left-column, .right-column {
+    flex-basis: 100%;
+    max-width: 100%;
+}
+
+.detail-name, .detail-price {
+    text-align: center;
+}
+
+}

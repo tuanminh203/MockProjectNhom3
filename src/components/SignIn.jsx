@@ -1,49 +1,55 @@
 import "../styles/Signin.css";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../api";
-import { useState } from "react";
-import { jwtDecode } from "jwt-decode"; // 👉 Import jwtDecode
+import { useState, useContext } from "react";
+import { AuthContext } from "../Context/AuthContext";
 
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { login: authLogin } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = await login(username, password);
-      console.log("JWT:", token);
+      const responseData = await login(username, password);
+       let token;
+
+      // Kiểm tra nếu responseData là một chuỗi (token trực tiếp) hoặc một đối tượng có thuộc tính 'token'
+      if (typeof responseData === 'string') {
+        token = responseData;
+      } else if (responseData && responseData.token) {
+        token = responseData.token;
+      }
 
       if (!token) {
-        alert("Không nhận được token!");
+        console.error("Không nhận được token!");
+        setErrorMessage("Đăng nhập thất bại: Không nhận được token.");
         return;
       }
       
-      // 👉 Giải mã JWT để lấy thông tin người dùng
-      const decodedToken = jwtDecode(token);
-      const user = decodedToken.sub;
+      // Lưu JWT vào localStorage với key "authToken" để khớp với api.js
+      localStorage.setItem("JWT", token);
 
-      if (!user) {
-        alert("Không tìm thấy tên người dùng trong token!");
-        return;
-      }
-
-      // Lưu JWT và username vào localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("username", user); // 👉 Lưu username đã giải mã
+      authLogin();
       
-      alert("Đăng nhập thành công!");
-      window.location.href = "/";
+      console.log("Đăng nhập thành công, token đã được lưu.");
+      
+      // Chuyển hướng người dùng và tải lại trang để các component cập nhật trạng thái
+      navigate("/");
     } catch (err) {
       console.error("Login failed:", err);
-      alert("Sai tên đăng nhập hoặc mật khẩu!");
+      setErrorMessage("Sai tên đăng nhập hoặc mật khẩu!");
     }
   };
 
   return (
     <section className="signin-container">
       <h2>Đăng Nhập Tài Khoản</h2>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Tên đăng nhập</label>

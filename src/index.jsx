@@ -12,7 +12,10 @@ import Tablelist from "./components/Tablelist";
 import Booking from "./components/Booking";
 import ConfirmRegistration from "./components/ConfirmRegistration";
 import { CartProvider } from "./Context/CartContext";
+import MenuItemDetail from "./components/MenuItemDetail";
 import Cart from "./components/Cart";
+import { ToastContainer } from "react-toastify";
+import { AuthProvider } from "./Context/AuthContext";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +30,10 @@ const router = createBrowserRouter([
         path: "menu",
         element: <Menu />,
       },
+        {
+        path: "menu/:id",
+        element: <MenuItemDetail />,
+      },
       {
         path: "tables",
         element: <Tablelist />,
@@ -35,11 +42,11 @@ const router = createBrowserRouter([
         path: "booking/:id",
         element: <Booking />,
       },
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
     ],
-  },
-  {
-    path: "/cart",
-    element: <Cart />,
   },
   {
     path: "/sign-in",
@@ -66,8 +73,11 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
+    <AuthProvider>
+    <ToastContainer /> 
     <CartProvider>
           <RouterProvider router={router} /> {" "}
     </CartProvider>
+    </AuthProvider>
   </React.StrictMode>
 );

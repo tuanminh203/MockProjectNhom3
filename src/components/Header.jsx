@@ -2,28 +2,48 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiBell, FiUser, FiSearch, FiShoppingCart } from "react-icons/fi";
 import { useState, useEffect, useContext } from "react";
 import { CartContext } from "../Context/CartContext";
+import { AuthContext } from "../Context/AuthContext";
 import "../styles/Header.css";
-import logoteam from "../assets/icons/logoteam.png";
 import CartOverlay from "./CartOverlay";
+import { jwtDecode } from "jwt-decode";
+import { ReactComponent as Logo } from '../assets/icons/logoteam.svg';
 
 export default function Header() {
   const [username, setUsername] = useState(null);
   const navigate = useNavigate();
-  const { cartItems } = useContext(CartContext);
+  const { cartItems, clearCart } = useContext(CartContext);
+  const { isLoggedIn, logout } = useContext(AuthContext);
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [showCart, setShowCart] = useState(false);
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    if (storedUsername) {
-      setUsername(storedUsername);
+    // Lấy token từ localStorage
+    const storedToken = localStorage.getItem("JWT");
+    if (storedToken) {
+      try {
+        // Giải mã token để lấy thông tin người dùng
+        const decodedToken = jwtDecode(storedToken);
+        const user = decodedToken.sub;
+        if (user) {
+          setUsername(user);
+        }
+      } catch (error) {
+        console.error("Failed to decode JWT:", error);
+        // Xóa token lỗi để tránh vấn đề trong tương lai
+        localStorage.removeItem("JWT");
+      }
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    setUsername(null);
+    // Gọi hàm logout từ AuthContext
+    logout();
+    
+    // Gọi hàm clearCart từ CartContext
+    clearCart();
+    
+    // Xóa cả authToken và username khỏi localStorage
+    localStorage.removeItem("JWT");
     navigate("/");
   };
 
@@ -32,7 +52,7 @@ export default function Header() {
       {/* Logo */}
       <div className="logo">
         <Link to="/">
-          <img src={logoteam} alt="Logo Team" className="logo-img" />
+           <Logo className="logo-img" />
         </Link>
       </div>
 
@@ -56,11 +76,12 @@ export default function Header() {
 
         <div className="cart-icon-wrapper" onClick={() => setShowCart(true)}>
           <FiShoppingCart className="icon" />
+          {/* Hiển thị số lượng giỏ hàng khi có item */}
           {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
         </div>
 
         <div className="auth-links">
-          {username ? (
+          {isLoggedIn ? ( 
             <div className="user-info">
               <div className="welcome-text">
                 <span>Chào mừng {username}</span>

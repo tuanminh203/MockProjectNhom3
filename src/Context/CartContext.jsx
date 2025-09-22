@@ -1,45 +1,82 @@
-import { createContext, useState } from "react";
-
+import { createContext, useState, useEffect, useContext } from 'react';
+import { getCart, addToCartApi, updateCartItemQuantityApi, removeCartItemApi } from '../api';
+import { AuthContext } from "../Context/AuthContext";
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+    const [cartItems, setCartItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  const addToCart = (dish, quantity = 1) => {
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.name === dish.name);
-      if (existing) {
-        return prev.map((item) =>
-          item.name === dish.name
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      } else {
-        return [...prev, { ...dish, quantity }];
-      }
-    });
-  };
+    const { isLoggedIn } = useContext(AuthContext); // 2. Lấy trạng thái đăng nhập từ context
+    
+    const clearCart = () => {
+        setCartItems([]);
+    };
 
-  const removeFromCart = (dishName) => {
-    setCartItems((prev) => prev.filter((item) => item.name !== dishName));
-  };
+    // Lấy giỏ hàng khi component được mount
+    const fetchCart = async () => {
+        try {
+            setLoading(true);
+            const data = await getCart();
+            setCartItems(data);
+            setError(null);
+        } catch (err) {
+            console.error("Lỗi khi lấy giỏ hàng:", err);
+            setError("Không thể tải giỏ hàng. Vui lòng đăng nhập.");
+            setCartItems([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const updateQuantity = (dishName, newQuantity) => {
-    const qty = Number(newQuantity);
-    if (qty <= 0) return removeFromCart(dishName);
+    useEffect(() => {
+        // 3. Gọi fetchCart() mỗi khi isLoggedIn thay đổi
+        fetchCart();
+    }, [isLoggedIn]);
 
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.name === dishName ? { ...item, quantity: qty } : item
-      )
+    const handleAddToCart = async (menuItem, quantity) => {
+        try {
+            const updatedCart = await addToCartApi(menuItem.id, quantity);
+            setCartItems(updatedCart);
+            setError(null);
+        } catch (err) {
+            console.error("Lỗi khi thêm món vào giỏ hàng:", err);
+            setError("Không thể thêm món vào giỏ. Vui lòng đăng nhập.");
+        }
+    };
+
+    const handleUpdateQuantity = async (menuItemId, quantity) => {
+        try {
+            const updatedCart = await updateCartItemQuantityApi(menuItemId, quantity);
+            setCartItems(updatedCart);
+        } catch (err) {
+            console.error("Lỗi khi cập nhật số lượng:", err);
+        }
+    };
+
+    const handleRemoveFromCart = async (menuItemId) => {
+        try {
+            await removeCartItemApi(menuItemId);
+            setCartItems(prevItems => prevItems.filter(item => item.menuItem.id !== menuItemId));
+        } catch (err) {
+            console.error("Lỗi khi xóa món khỏi giỏ hàng:", err);
+        }
+    };
+
+    const value = {
+        cartItems,
+        loading,
+        error,
+        addToCart: handleAddToCart,
+        updateQuantity: handleUpdateQuantity,
+        removeFromCart: handleRemoveFromCart,
+        clearCart
+    };
+
+    return (
+        <CartContext.Provider value={value}>
+            {children}
+        </CartContext.Provider>
     );
-  };
-
-  return (
-    <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, updateQuantity }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
 };
