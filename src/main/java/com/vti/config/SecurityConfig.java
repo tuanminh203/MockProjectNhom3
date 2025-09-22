@@ -53,11 +53,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/reservations/confirm/**").hasAnyAuthority("MANAGER", "ADMIN")
                         .requestMatchers("/api/v1/reservations/complete/**").hasAnyAuthority("MANAGER", "ADMIN")
 
-                        // Admin APIs
-                        .requestMatchers("/api/v1/admin/menu-items/**").hasAnyAuthority("ADMIN", "MANAGER")
-
                         // Customer APIs
-                        .requestMatchers("/api/v1/cart/**").hasAuthority("CUSTOMER")
+//                        .requestMatchers("/api/v1/cart/**").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/v1/orders/**").hasAuthority("CUSTOMER")
 
                         // Any other requests must be authenticated

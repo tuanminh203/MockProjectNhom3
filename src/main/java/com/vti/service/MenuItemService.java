@@ -52,6 +52,7 @@ public class MenuItemService {
 
     // Thêm món ăn mới
     public MenuItem createMenuItem(MenuItemRequest request) throws IOException {
+
         String imageUrl = processAndSaveImage(request.getImageFile());
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new AppException("Category không tồn tại.", HttpStatus.NOT_FOUND));

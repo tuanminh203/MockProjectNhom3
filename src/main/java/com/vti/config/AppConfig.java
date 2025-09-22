@@ -1,8 +1,7 @@
 package com.vti.config;
 
-import com.vti.dto.ReservationResponse;
-import com.vti.dto.TableResponse;
-import com.vti.dto.UserInfo;
+import com.vti.dto.*;
+import com.vti.entity.MenuItem;
 import com.vti.entity.Reservation;
 import com.vti.entity.Tables;
 import com.vti.entity.User;
@@ -24,6 +23,8 @@ public class AppConfig {
 
         // Ánh xạ từ Reservation entity sang ReservationResponse DTO
         modelMapper.createTypeMap(Reservation.class, ReservationResponse.class);
+
+        modelMapper.createTypeMap(MenuItem.class, MenuItemRequest.class);
 
         return modelMapper;
     }

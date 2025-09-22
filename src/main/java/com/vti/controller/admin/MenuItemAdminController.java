@@ -12,17 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/admin/menu-items")
+@RequestMapping("/api/v1/public/menu-items")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
 public class MenuItemAdminController {
     private final MenuItemService menuItemService;
 
     //Thêm món ăn mới
     @PostMapping
-    public ResponseEntity<MenuItem> createMenuItem(@ModelAttribute MenuItemRequest request) throws IOException {
-        MenuItem createdMenuItem = menuItemService.createMenuItem(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdMenuItem);
+    public ResponseEntity<?> createMenuItem(@ModelAttribute MenuItemRequest request) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(menuItemService.createMenuItem(request));
     }
 
     //Cập nhật thông tin món ăn

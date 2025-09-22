@@ -17,34 +17,38 @@ public class AuthController {
     private final UserService userService;
     private final OtpService otpService;
 
+    //done
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         String jwt = authService.authenticateAndGetJwt(loginRequest);
         return ResponseEntity.ok(jwt);
     }
 
+    //done
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegistrationRequest request) {
         userService.registerUser(request);
         return ResponseEntity.ok("Người dùng đã được đăng ký. Vui lòng kiểm tra email để xác thực tài khoản.");
     }
 
+    //done
     @PostMapping("/confirm-registration")
     public ResponseEntity<String> confirmRegistration(@RequestBody VerifyOtpRequest request) {
         otpService.validateAndEnableUser(request.getEmail(), request.getOtp());
         return ResponseEntity.ok("Tài khoản đã được xác thực thành công.");
     }
 
+    //done
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         otpService.generateAndSendOtp(request);
         return ResponseEntity.ok("Mã OTP đã được gửi đến email của bạn.");
     }
 
-    @PostMapping("/reset-password/{email}")
-    public ResponseEntity<String> resetPassword(@PathVariable String email,
-                                                @RequestBody ResetPasswordRequest request) {
-        otpService.validateAndResetPassword(email, request.getOtp(), request.getNewPassword());
+    //done
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        otpService.validateAndResetPassword(request.getEmail(), request.getOtp(), request.getNewPassword());
         return ResponseEntity.ok("Mật khẩu đã được đặt lại thành công.");
     }
 

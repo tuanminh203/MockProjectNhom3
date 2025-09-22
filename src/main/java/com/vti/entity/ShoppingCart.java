@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,5 +24,5 @@ public class ShoppingCart {
     private User user;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ShoppingCartItem> items;
+    private List<ShoppingCartItem> items = new ArrayList<>();;
 }

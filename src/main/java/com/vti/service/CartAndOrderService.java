@@ -37,6 +37,7 @@ public class CartAndOrderService {
                 .orElseThrow(() -> new AppException("Người dùng không tồn tại.", HttpStatus.NOT_FOUND));
     }
 
+    // Lấy giỏ hàng của người dùng hiện tại hoặc tạo mới nếu chưa có
     private ShoppingCart getOrCreateUserCart(User user) {
         return shoppingCartRepository.findByUser(user)
                 .orElseGet(() -> {
