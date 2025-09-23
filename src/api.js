@@ -278,15 +278,15 @@ export const getAvailableTables = async () => {
 };
 
 // Hàm đặt bàn
-export const makeReservation = async (tableId, requestBody) => {
-    try {
-        const response = await api.post(`/reservations/make/${tableId}`, requestBody);
-        return response.data;
-    } catch (error) {
-        console.error("Lỗi khi đặt bàn:", error);
-        throw error;
-    }
-};
+// export const makeReservation = async (tableId, requestBody) => {
+//     try {
+//         const response = await api.post(`/reservations/make/${tableId}`, requestBody);
+//         return response.data;
+//     } catch (error) {
+//         console.error("Lỗi khi đặt bàn:", error);
+//         throw error;
+//     }
+// };
 
 
 // ==========================================================
