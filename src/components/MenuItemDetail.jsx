@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getMenuItemById } from "../api";
 import { CartContext } from "../Context/CartContext";
 import "../styles/MenuItemDetail.css";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MenuItemDetail = () => {
   const { id } = useParams();
@@ -31,119 +31,131 @@ const MenuItemDetail = () => {
     fetchMenuItem();
   }, [id]);
 
-const generateAiDescription = async () => {
-    if (menuItem) {
-      setIsGenerating(true);
-      try {
-        const prompt = `Viết một đoạn mô tả hấp dẫn cho món ăn sau: Tên món: ${menuItem.name}. Mô tả cũ: ${menuItem.description}.`;
-        const payload = {
-            contents: [{ parts: [{ text: prompt }] }],
-            tools: [{ "google_search": {} }],
-            systemInstruction: {
-                parts: [{ text: "Hãy đóng vai một đầu bếp và nhà phê bình ẩm thực chuyên nghiệp. Cung cấp một đoạn văn duy nhất, hấp dẫn, dài 3-5 câu để mô tả món ăn." }]
-            },
-        };
-        
-        // Sử dụng biến môi trường để lấy khóa API
-        const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
-        if (!apiKey) {
-          throw new Error("API Key is missing. Please check your .env file.");
-        }
+  const generateAiDescription = async () => {
+    if (menuItem) {
+      setIsGenerating(true);
+      try {
+        const prompt = `Viết một đoạn mô tả hấp dẫn cho món ăn sau: Tên món: ${menuItem.name}. Mô tả cũ: ${menuItem.description}.`;
+        const payload = {
+          contents: [{ parts: [{ text: prompt }] }],
+          tools: [{ google_search: {} }],
+          systemInstruction: {
+            parts: [
+              {
+                text: "Hãy đóng vai một đầu bếp và nhà phê bình ẩm thực chuyên nghiệp. Cung cấp một đoạn văn duy nhất, hấp dẫn, dài 3-5 câu để mô tả món ăn.",
+              },
+            ],
+          },
+        }; // Sử dụng biến môi trường để lấy khóa API
+        const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+        if (!apiKey) {
+          throw new Error("API Key is missing. Please check your .env file.");
+        }
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
 
-        const result = await response.json();
-        const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text) {
-          setAiDescription(text);
-        } else {
-          setAiDescription("Không thể tạo mô tả. Vui lòng thử lại.");
-        }
-      } catch (error) {
-        console.error("Lỗi khi tạo mô tả AI:", error);
-        setAiDescription("Không thể tạo mô tả. Vui lòng thử lại.");
-      } finally {
-        setIsGenerating(false);
-      }
-    }
-  };
+        const result = await response.json();
+        const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) {
+          setAiDescription(text);
+        } else {
+          setAiDescription("Không thể tạo mô tả. Vui lòng thử lại.");
+        }
+      } catch (error) {
+        console.error("Lỗi khi tạo mô tả AI:", error);
+        setAiDescription("Không thể tạo mô tả. Vui lòng thử lại.");
+      } finally {
+        setIsGenerating(false);
+      }
+    }
+  };
 
   const generatePairingSuggestion = async () => {
-  if (menuItem) {
-    setIsGenerating(true);
-    try {
-      const prompt = `Gợi ý 2-3 món ăn kèm hoặc đồ uống phù hợp với món chính sau: ${menuItem.name}. Gợi ý phải ngắn gọn, chỉ bao gồm tên món.`;
-      const payload = {
-        contents: [{ parts: [{ text: prompt }] }],
-        tools: [{ "google_search": {} }],
-        systemInstruction: {
-          parts: [{ text: "Đóng vai một chuyên gia ẩm thực và đưa ra các gợi ý kết hợp món ăn sáng tạo, hấp dẫn. Cung cấp câu trả lời dưới dạng một danh sách có gạch đầu dòng, ngắn gọn, chỉ có tên món ăn." }]
-        },
-      };
+    if (menuItem) {
+      setIsGenerating(true);
+      try {
+        const prompt = `Gợi ý 2-3 món ăn kèm hoặc đồ uống phù hợp với món chính sau: ${menuItem.name}. Gợi ý phải ngắn gọn, chỉ bao gồm tên món.`;
+        const payload = {
+          contents: [{ parts: [{ text: prompt }] }],
+          tools: [{ google_search: {} }],
+          systemInstruction: {
+            parts: [
+              {
+                text: "Đóng vai một chuyên gia ẩm thực và đưa ra các gợi ý kết hợp món ăn sáng tạo, hấp dẫn. Cung cấp câu trả lời dưới dạng một danh sách có gạch đầu dòng, ngắn gọn, chỉ có tên món ăn.",
+              },
+            ],
+          },
+        };
 
-      // Sử dụng biến môi trường để lấy khóa API
-      const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
-      if (!apiKey) {
-        throw new Error("API Key is missing. Please check your .env file.");
-      }
+        // Sử dụng biến môi trường để lấy khóa API
+        const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+        if (!apiKey) {
+          throw new Error("API Key is missing. Please check your .env file.");
+        }
 
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
 
-      const result = await response.json();
-      const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (text) {
-        setAiSuggestion(text);
-      } else {
+        const result = await response.json();
+        const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) {
+          setAiSuggestion(text);
+        } else {
+          setAiSuggestion("Không thể đưa ra gợi ý. Vui lòng thử lại.");
+        }
+      } catch (error) {
+        console.error("Lỗi khi tạo gợi ý AI:", error);
         setAiSuggestion("Không thể đưa ra gợi ý. Vui lòng thử lại.");
+      } finally {
+        setIsGenerating(false);
       }
-    } catch (error) {
-      console.error("Lỗi khi tạo gợi ý AI:", error);
-      setAiSuggestion("Không thể đưa ra gợi ý. Vui lòng thử lại.");
-    } finally {
-      setIsGenerating(false);
     }
-  }
-};
+  };
 
   const handleAddToCart = async () => {
-  if (menuItem) {
-    try {
-      addToCart(menuItem, quantity);
-      toast.success(`${quantity} món ${menuItem.name} đã được thêm vào giỏ hàng!`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } catch (error) {
-      toast.error("Có lỗi xảy ra khi thêm món ăn vào giỏ hàng. Vui lòng thử lại.", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      console.error("Lỗi khi thêm món ăn vào giỏ hàng:", error);
+    if (menuItem) {
+      try {
+        addToCart(menuItem, quantity);
+        toast.success(
+          `${quantity} món ${menuItem.name} đã được thêm vào giỏ hàng!`,
+          {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          }
+        );
+      } catch (error) {
+        toast.error(
+          "Có lỗi xảy ra khi thêm món ăn vào giỏ hàng. Vui lòng thử lại.",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          }
+        );
+        console.error("Lỗi khi thêm món ăn vào giỏ hàng:", error);
+      }
     }
-  }
-};
+  };
 
   const handleBuyNow = () => {
     if (menuItem) {
@@ -173,7 +185,9 @@ const generateAiDescription = async () => {
             />
           </div>
           <h1 className="detail-name">{menuItem.name}</h1>
-          <p className="detail-price">Giá: {menuItem.price?.toLocaleString()} đ</p>
+          <p className="detail-price">
+            Giá: {menuItem.price?.toLocaleString()} đ
+          </p>
           <div className="quantity-control">
             <label>Số lượng:</label>
             <input
@@ -192,12 +206,12 @@ const generateAiDescription = async () => {
             </button>
           </div>
         </div>
-        
+
         {/* Cột bên phải: Mô tả, đánh giá, AI */}
         <div className="right-column">
           <div className="detail-info">
             <p className="detail-description">{menuItem.description}</p>
-            
+
             <div className="rating-section">
               <h3>Đánh giá</h3>
               <p>⭐️⭐️⭐️⭐️⭐️</p>
@@ -208,11 +222,17 @@ const generateAiDescription = async () => {
           <div className="ai-sections">
             {aiDescription && (
               <div className="ai-description">
-                <p><strong>Mô tả AI:</strong></p>
+                <p>
+                  <strong>Mô tả AI:</strong>
+                </p>
                 <p>{aiDescription}</p>
               </div>
             )}
-            <button className="ai-btn" onClick={generateAiDescription} disabled={isGenerating}>
+            <button
+              className="ai-btn"
+              onClick={generateAiDescription}
+              disabled={isGenerating}
+            >
               {isGenerating ? "Đang tạo..." : "✨ Tạo mô tả"}
             </button>
 
@@ -223,7 +243,11 @@ const generateAiDescription = async () => {
               ) : (
                 <p>Nhấn nút để nhận gợi ý món ăn kèm.</p>
               )}
-              <button className="ai-btn" onClick={generatePairingSuggestion} disabled={isGenerating}>
+              <button
+                className="ai-btn"
+                onClick={generatePairingSuggestion}
+                disabled={isGenerating}
+              >
                 {isGenerating ? "Đang tạo..." : "✨ Gợi ý món ăn kèm"}
               </button>
             </div>
