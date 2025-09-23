@@ -16,6 +16,8 @@ import MenuItemDetail from "./components/MenuItemDetail";
 import Cart from "./components/Cart";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./Context/AuthContext";
+import Contact from "./components/Contact";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +32,7 @@ const router = createBrowserRouter([
         path: "menu",
         element: <Menu />,
       },
-        {
+      {
         path: "menu/:id",
         element: <MenuItemDetail />,
       },
@@ -45,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
       },
     ],
   },
@@ -74,10 +80,10 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <AuthProvider>
-    <ToastContainer /> 
-    <CartProvider>
-          <RouterProvider router={router} /> {" "}
-    </CartProvider>
+      <ToastContainer />
+      <CartProvider>
+            <RouterProvider router={router} /> {" "}
+      </CartProvider>
     </AuthProvider>
   </React.StrictMode>
 );

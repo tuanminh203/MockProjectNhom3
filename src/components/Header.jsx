@@ -62,6 +62,7 @@ export default function Header() {
         <Link to="/tables">Danh sách bàn</Link>
         <Link to="/menu">Menu</Link>
         <Link to="/contact">Liên hệ</Link>
+  
       </nav>
 
       {/* Search + icons + auth */}
