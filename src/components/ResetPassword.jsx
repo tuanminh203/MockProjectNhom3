@@ -1,86 +1,92 @@
 import "../styles/ResetPassword.css";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { resetPassword } from "../api";
 
 export default function ResetPassword() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    otp: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+  const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [otp, setOtp] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // Lấy email từ URL khi component được load
+    useEffect(() => {
+        const emailFromUrl = searchParams.get("email");
+        if (emailFromUrl) {
+            setEmail(emailFromUrl);
+        } else {
+            alert("Không tìm thấy email. Vui lòng thử lại.");
+            navigate("/forgot-password");
+        }
+    }, [searchParams, navigate]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (newPassword !== confirmPassword) {
+            alert("Mật khẩu mới và mật khẩu xác nhận không khớp.");
+            return;
+        }
 
-    if (formData.newPassword !== formData.confirmPassword) {
-      alert("Mật khẩu nhập lại không khớp!");
-      return;
-    }
+        try {
+            const requestBody = { email, otp, newPassword, confirmPassword };
+            await resetPassword(requestBody);
+            alert("Mật khẩu đã được đặt lại thành công! Vui lòng đăng nhập.");
+            navigate("/sign-in");
+        } catch (err) {
+            let errorMessage = "Không thể đặt lại mật khẩu. Vui lòng kiểm tra lại OTP và thử lại.";
+            if (err.response && err.response.data && err.response.data.message) {
+                errorMessage = err.response.data.message;
+            }
+            alert(errorMessage);
+        }
+    };
 
-    // TODO: gọi API xác thực OTP và cập nhật mật khẩu
-    alert("Đặt lại mật khẩu thành công!");
-    navigate("/sign-in");
-  };
 
-  return (
-    <section className="reset-container">
-      <h2>Đặt Lại Mật Khẩu</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Mã OTP</label>
-          <input
-            type="text"
-            name="otp"
-            value={formData.otp}
-            onChange={handleChange}
-            placeholder="Nhập mã OTP"
-            required
-          />
-        </div>
+     return (
+        <section className="reset-container">
+            <h2>Đặt lại Mật khẩu</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label>Email</label>
+                    <p className="email-display">{email}</p>
+                </div>
 
-        <div className="form-group">
-          <label>Mật khẩu mới</label>
-          <input
-            type="password"
-            name="newPassword"
-            value={formData.newPassword}
-            onChange={handleChange}
-            placeholder="Nhập mật khẩu mới"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Nhập lại mật khẩu mới</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            placeholder="Nhập lại mật khẩu mới"
-            required
-          />
-        </div>
-
-        <div className="form-actions">
-          <button type="submit" className="btn-reset">
-            Xác nhận
-          </button>
-          <button
-            type="button"
-            className="btn-back"
-            onClick={() => navigate("/sign-in")}
-          >
-            Quay lại
-          </button>
-        </div>
-      </form>
-    </section>
-  );
+                <div className="form-group">
+                    <label>Mã OTP</label>
+                    <input
+                        type="text"
+                        placeholder="Nhập mã OTP"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Mật khẩu mới</label>
+                    <input
+                        type="password"
+                        placeholder="Nhập mật khẩu mới"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Xác nhận mật khẩu mới</label>
+                    <input
+                        type="password"
+                        placeholder="Nhập lại mật khẩu mới"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit" className="btn-reset">
+                    Đặt lại Mật khẩu
+                </button>
+            </form>
+        </section>
+    );
 }

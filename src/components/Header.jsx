@@ -1,34 +1,58 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FiBell, FiUser, FiSearch, FiShoppingCart } from "react-icons/fi";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { CartContext } from "../Context/CartContext";
+import { AuthContext } from "../Context/AuthContext";
 import "../styles/Header.css";
-import logoteam from "../assets/icons/logoteam.png"; 
+import CartOverlay from "./CartOverlay";
+import { jwtDecode } from "jwt-decode";
+import { ReactComponent as Logo } from '../assets/icons/logoteam.svg';
 
 export default function Header() {
   const [username, setUsername] = useState(null);
   const navigate = useNavigate();
+  const { cartItems, clearCart } = useContext(CartContext);
+  const { isLoggedIn, logout } = useContext(AuthContext);
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const [showCart, setShowCart] = useState(false);
 
   useEffect(() => {
-    // Effect để kiểm tra trạng thái đăng nhập khi component được render
-    const storedUsername = localStorage.getItem("username");
-    if (storedUsername) {
-      setUsername(storedUsername);
+    // Lấy token từ localStorage
+    const storedToken = localStorage.getItem("JWT");
+    if (storedToken) {
+      try {
+        // Giải mã token để lấy thông tin người dùng
+        const decodedToken = jwtDecode(storedToken);
+        const user = decodedToken.sub;
+        if (user) {
+          setUsername(user);
+        }
+      } catch (error) {
+        console.error("Failed to decode JWT:", error);
+        // Xóa token lỗi để tránh vấn đề trong tương lai
+        localStorage.removeItem("JWT");
+      }
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    setUsername(null);
+    // Gọi hàm logout từ AuthContext
+    logout();
+    
+    // Gọi hàm clearCart từ CartContext
+    clearCart();
+    
+    // Xóa cả authToken và username khỏi localStorage
+    localStorage.removeItem("JWT");
     navigate("/");
   };
 
   return (
-      <header className="header">
+    <header className="header">
       {/* Logo */}
       <div className="logo">
-        <Link to="/"> {/* 👈 Click logo sẽ đưa về trang chủ */}
-          <img src={logoteam} alt="Logo Team" className="logo-img" />
+        <Link to="/">
+           <Logo className="logo-img" />
         </Link>
       </div>
 
@@ -38,6 +62,7 @@ export default function Header() {
         <Link to="/tables">Danh sách bàn</Link>
         <Link to="/menu">Menu</Link>
         <Link to="/contact">Liên hệ</Link>
+  
       </nav>
 
       {/* Search + icons + auth */}
@@ -49,19 +74,24 @@ export default function Header() {
 
         <FiBell className="icon" />
         <FiUser className="icon" />
-        <FiShoppingCart className="icon" />
+
+        <div className="cart-icon-wrapper" onClick={() => setShowCart(true)}>
+          <FiShoppingCart className="icon" />
+          {/* Hiển thị số lượng giỏ hàng khi có item */}
+          {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+        </div>
 
         <div className="auth-links">
-          {username ? (
-            // Nếu đã đăng nhập, hiển thị lời chào và nút Đăng xuất
-                        <div className="user-info">
-                            <div className="welcome-text">
-                                <span>Chào mừng {username}</span>
-                            </div>
-                            <button className="logout-btn" onClick={handleLogout}>Đăng xuất</button>
-                        </div>
+          {isLoggedIn ? ( 
+            <div className="user-info">
+              <div className="welcome-text">
+                <span>Chào mừng {username}</span>
+              </div>
+              <button className="logout-btn" onClick={handleLogout}>
+                Đăng xuất
+              </button>
+            </div>
           ) : (
-            // Nếu chưa đăng nhập, hiển thị link Đăng ký/Đăng nhập
             <>
               <Link to="/register">Đăng ký</Link> |{" "}
               <Link to="/sign-in">Đăng nhập</Link>
@@ -69,6 +99,8 @@ export default function Header() {
           )}
         </div>
       </div>
+
+      {showCart && <CartOverlay onClose={() => setShowCart(false)} />}
     </header>
   );
 }
