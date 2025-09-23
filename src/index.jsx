@@ -11,6 +11,8 @@ import ResetPassword from "./components/ResetPassword";
 import Tablelist from "./components/Tablelist";
 import Booking from "./components/Booking";
 import ConfirmRegistration from "./components/ConfirmRegistration";
+import HomePageAdmin from "./components/admin/HomePageAdmin";
+
 
 const router = createBrowserRouter([
   {
@@ -56,6 +58,12 @@ const router = createBrowserRouter([
     path: "/reset-password",
     element: <ResetPassword />
   },
+  {
+    path: "/admin",
+    element: <HomePageAdmin />
+  },
+
+  
  
 ]);
 
