@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,8 +85,23 @@ public class ReservationService {
     }
 
     // Lấy toàn bộ danh sách đặt bàn (dành cho Admin/Manager)
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
+    public List<ReservationResponse> getAllReservations() {
+        List<Reservation> reservations = reservationRepository.findAll();
+
+        // Sử dụng Java Stream để lặp và ánh xạ từng đối tượng
+        return reservations.stream()
+                .map(reservation -> modelMapper.map(reservation, ReservationResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    // Đếm số lượng đơn đặt bàn đã được xác nhận và hoàn thành
+    public long getConfirmedAndCompletedReservationsCount() {
+        // Tạo một danh sách các trạng thái cần đếm
+        List<ReservationStatus> statuses = Arrays.asList(
+                ReservationStatus.CONFIRMED,
+                ReservationStatus.COMPLETED
+        );
+        return reservationRepository.countByStatusIn(statuses);
     }
 
     // Manager/Admin xác nhận đơn đặt bàn
@@ -136,5 +152,7 @@ public class ReservationService {
         reservation.getTable().setStatus(TableStatus.OCCUPIED);
         return reservationRepository.save(reservation);
     }
+
+
 
 }

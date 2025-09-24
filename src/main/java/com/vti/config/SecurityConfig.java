@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**", "/error", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()
                         .requestMatchers("/api/v1/menu/**").permitAll()
+                        .requestMatchers("/api/v1/dashboard/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/api/v1/reservations/tables/available").permitAll()
 
@@ -53,9 +54,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/reservations/confirm/**").hasAnyAuthority("MANAGER", "ADMIN")
                         .requestMatchers("/api/v1/reservations/complete/**").hasAnyAuthority("MANAGER", "ADMIN")
 
-                        // Customer APIs
-//                        .requestMatchers("/api/v1/cart/**").hasAuthority("CUSTOMER")
-                        .requestMatchers("/api/v1/orders/**").hasAuthority("CUSTOMER")
+
 
                         // Any other requests must be authenticated
                         .anyRequest().authenticated()

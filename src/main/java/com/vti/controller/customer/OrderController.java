@@ -13,11 +13,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
-@PreAuthorize("hasAuthority('CUSTOMER')")
+@PreAuthorize("hasRole('CUSTOMER')")
 public class OrderController {
     private final CartAndOrderService cartAndOrderService;
 
-    //Đặt đơn hàng mới từ giỏ hàng
+    //Đặt đơn hàng mới từ giỏ hàng done
     @PostMapping
     public ResponseEntity<OrderResponse> placeOrder() {
         OrderResponse newOrder = cartAndOrderService.placeOrderFromCart();
@@ -31,10 +31,18 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
-    //Xem chi tiết một đơn hàng
+    //Xem chi tiết một đơn hàng done
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> getOrderDetails(@PathVariable Long id) {
         OrderResponse orderDetails = cartAndOrderService.getOrderDetails(id);
         return ResponseEntity.ok(orderDetails);
     }
+
+    //Hủy đơn hàng done
+    @PutMapping("/{orderId}/cancel")
+    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable Long orderId) {
+        OrderResponse canceledOrder = cartAndOrderService.cancelOrder(orderId);
+        return ResponseEntity.ok(canceledOrder);
+    }
+
 }

@@ -4,6 +4,7 @@ import com.vti.dto.AddToCartRequest;
 import com.vti.dto.OrderResponse;
 import com.vti.dto.ShoppingCartItemResponse;
 import com.vti.entity.*;
+import com.vti.entity.enums.OrderStatus;
 import com.vti.exception.AppException;
 import com.vti.repository.*;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -130,6 +132,7 @@ public class CartAndOrderService {
         // Tạo đơn hàng mới
         Order newOrder = new Order();
         newOrder.setUser(currentUser);
+        newOrder.setStatus(OrderStatus.PENDING);
         newOrder.setOrderDateTime(LocalDateTime.now());
         BigDecimal total = BigDecimal.ZERO;
 
@@ -177,5 +180,37 @@ public class CartAndOrderService {
         }
 
         return modelMapper.map(order, OrderResponse.class);
+    }
+
+    @Transactional
+    public OrderResponse cancelOrder(Long orderId) {
+        User currentUser = getCurrentUser();
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException("Đơn hàng không tồn tại.", HttpStatus.NOT_FOUND));
+
+        // Kiểm tra quyền sở hữu đơn hàng
+        if (!order.getUser().equals(currentUser)) {
+            throw new AppException("Bạn không có quyền hủy đơn hàng này.", HttpStatus.FORBIDDEN);
+        }
+
+        // Kiểm tra trạng thái đơn hàng có thể hủy được không
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new AppException("Không thể hủy đơn hàng này vì nó đã được " + order.getStatus() + ".", HttpStatus.BAD_REQUEST);
+        }
+
+        // Cập nhật trạng thái và lưu lại
+        order.setStatus(OrderStatus.CANCELLED);
+        order.setOrderDateTime(LocalDateTime.now());
+        orderRepository.save(order);
+
+        return modelMapper.map(order, OrderResponse.class);
+    }
+
+    public long getConfirmedOrdersCount() {
+        return orderRepository.countByStatus(OrderStatus.CONFIRMED);
+    }
+
+    public List<Map<String, Object>> getTopSellingDishes() {
+        return orderItemRepository.findTopSellingDishes();
     }
 }
