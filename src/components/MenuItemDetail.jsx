@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getMenuItemById } from "../api";
+import { getMenuItemById, placeOrderFromCart} from "../api";
 import { CartContext } from "../Context/CartContext";
 import "../styles/MenuItemDetail.css";
 import { toast } from "react-toastify";
@@ -156,13 +156,31 @@ const MenuItemDetail = () => {
       }
     }
   };
-
-  const handleBuyNow = () => {
+  
+  const handleBuyNow = async () => {
     if (menuItem) {
-      addToCart(menuItem, quantity);
-      navigate("/cart");
+      try {
+
+        const newOrder = await placeOrderFromCart();
+
+        toast.success("Đặt hàng thành công! Vui lòng xác nhận đơn hàng.", {
+          position: "top-center",
+          autoClose: 5000,
+        });
+        
+        navigate(`/order-confirmation/${newOrder.id}`);
+
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || "Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.";
+        toast.error(errorMessage, {
+          position: "top-center",
+          autoClose: 5000,
+        });
+        console.error("Lỗi khi đặt hàng:", error);
+      }
     }
   };
+
 
   if (loading) {
     return <div className="loading">Đang tải...</div>;
@@ -202,7 +220,7 @@ const MenuItemDetail = () => {
               Thêm vào giỏ
             </button>
             <button className="buy-now-btn" onClick={handleBuyNow}>
-              Thanh toán ngay
+              Đặt hàng ngay
             </button>
           </div>
         </div>

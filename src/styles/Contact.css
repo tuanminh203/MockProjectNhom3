@@ -1,88 +1,113 @@
-.contact-wrapper {
+/* Container chính của trang */
+.contact-page-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
   display: flex;
-  justify-content: center;
-  padding: 40px 20px;
-  background: linear-gradient(to right, #fdfbfb, #ebedee);
+  flex-wrap: wrap;
+  gap: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.contact-card {
-  background-color: #fff;
+/* Các thẻ thông tin */
+.contact-info-card,
+.map-card,
+.social-card {
+  background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   padding: 30px;
-  max-width: 500px;
-  width: 100%;
-  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.contact-title {
+.contact-info-card {
+  flex: 1 1 300px;
+}
+
+.map-card {
+  flex: 2 1 600px;
+}
+
+.social-card {
+  flex: 1 1 100%;
+}
+
+.title {
   font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.contact-info p {
-  font-size: 16px;
-  margin: 10px 0;
-}
-
-.contact-info span {
   font-weight: bold;
+  color: #333;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+/* Các mục thông tin */
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 16px;
   color: #555;
 }
 
-.social-section h3 {
-  margin-top: 30px;
-  font-size: 18px;
-  color: #444;
-}
-
-.social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 15px;
-}
-
-.icon {
+.info-item i {
+  color: #007bff; /* Màu xanh dương cho biểu tượng */
+  margin-right: 15px;
   font-size: 20px;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+}
+
+.info-item p {
+  margin: 0;
+}
+
+/* Phần bản đồ */
+.map-card iframe {
+  border-radius: 8px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Phần mạng xã hội */
+.social-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.social-link {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease;
+  padding: 10px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.icon:hover {
-  transform: scale(1.1);
+.social-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.social-link i {
+  margin-right: 10px;
 }
 
 .facebook {
-  background-color: #3b5998;
+  background-color: #1877f2;
 }
 
 .youtube {
   background-color: #ff0000;
 }
 
+/* Biểu tượng Google không được sử dụng ở đây, bạn có thể xóa nếu không cần */
 .google {
-  background-color: #4285f4;
+  background-color: #db4437;
 }
 
-.restaurant-name {
-  font-size: 30px;
-  font-weight: bold;
-  color: black;
-  margin-top: 10px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+/* Đảm bảo responsive trên điện thoại */
+@media (max-width: 768px) {
+  .contact-page-container {
+    flex-direction: column;
+  }
 }

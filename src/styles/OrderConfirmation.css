@@ -1,0 +1,173 @@
+/* Container chính của trang */
+.order-confirmation-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 20px;
+  background-color: #f0f2f5;
+  font-family: Arial, sans-serif;
+}
+
+/* Thẻ chính chứa nội dung */
+.confirmation-card {
+  width: 100%;
+  max-width: 600px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  text-align: center;
+}
+
+/* Tiêu đề và biểu tượng */
+.confirmation-header {
+  margin-bottom: 30px;
+}
+
+.confirmation-icon {
+  font-size: 5rem;
+  color: #28a745; /* Màu xanh lá cây của icon */
+  margin-bottom: 15px;
+}
+
+.confirmation-header h1 {
+  font-size: 2.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.confirmation-header p {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Tóm tắt chi tiết đơn hàng */
+.order-details-summary {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px dashed #e0e0e0;
+  margin-bottom: 30px;
+}
+
+.order-details-summary h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.total-amount {
+  font-weight: bold;
+  color: #d9534f;
+  font-size: 1.1rem;
+}
+
+/* Danh sách món ăn */
+.order-items-list {
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.order-items-list h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 5px;
+}
+
+.order-items-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.order-items-list li {
+  padding: 8px 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+/* Nút quay lại trang chủ */
+.back-to-home-btn {
+  padding: 12px 25px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-to-home-btn:hover {
+  background-color: #0056b3;
+}
+
+.confirmation-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* Tạo khoảng cách giữa các nút */
+  margin-top: 20px;
+}
+
+.btn-cancel,
+.btn-pay {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+  border: none;
+  color: white; /* Thêm màu chữ để đảm bảo hiển thị */
+}
+
+.btn-cancel {
+  background-color: #dc3545;
+}
+
+.btn-cancel:hover {
+  background-color: #c82333;
+}
+
+.btn-cancel:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.btn-pay {
+  background-color: #28a745;
+}
+
+.btn-pay:hover {
+  background-color: #218838;
+}
+
+/* Trạng thái tải và lỗi */
+.loading-state,
+.error-state,
+.not-found-state {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

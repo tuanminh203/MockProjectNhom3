@@ -11,18 +11,16 @@ import ResetPassword from "./components/ResetPassword";
 import Tablelist from "./components/Tablelist";
 import Booking from "./components/Booking";
 import ConfirmRegistration from "./components/ConfirmRegistration";
-<<<<<<< HEAD
-import HomePageAdmin from "./components/admin/HomePageAdmin";
 
-=======
+import HomePageAdmin from "./components/admin/HomePageAdmin";
 import { CartProvider } from "./Context/CartContext";
 import MenuItemDetail from "./components/MenuItemDetail";
 import Cart from "./components/Cart";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./Context/AuthContext";
 import Contact from "./components/Contact";
-import "@fortawesome/fontawesome-free/css/all.min.css";
->>>>>>> abb34dd21ee7782695d06a75b25e6f7bf688a5fc
+import OrderConfirmation from "./components/OrderConfirmation";
+// import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +52,10 @@ const router = createBrowserRouter([
         element: <Cart />,
       },
       {
+        path: "/order-confirmation/:orderId",
+        element: <OrderConfirmation />,
+      },
+      {
         path: "/contact",
         element: <Contact />,
       },
@@ -79,16 +81,10 @@ const router = createBrowserRouter([
     path: "/reset-password",
     element: <ResetPassword />,
   },
-<<<<<<< HEAD
   {
     path: "/admin",
     element: <HomePageAdmin />
   },
-
-  
- 
-=======
->>>>>>> abb34dd21ee7782695d06a75b25e6f7bf688a5fc
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
